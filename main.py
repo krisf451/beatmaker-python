@@ -8,6 +8,7 @@ HEIGHT = 800
 black = (0, 0, 0)
 white = (255, 255, 255)
 gray = (128, 128, 128)
+dark_gray = (50, 50, 50)
 green = (0, 255, 0)
 gold = (212, 175, 55)
 blue = (0, 255, 255)
@@ -15,6 +16,7 @@ blue = (0, 255, 255)
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Beat Maker')
 label_font = pygame.font.Font('Roboto-Bold.ttf', 32)
+medium_font = pygame.font.Font('Roboto-Bold.ttf', 24)
 
 fps = 60
 timer = pygame.time.Clock()
@@ -35,6 +37,7 @@ kick = mixer.Sound('sounds/kick.WAV')
 clap = mixer.Sound('sounds/clap.wav')
 crash = mixer.Sound('sounds/crash.wav')
 tom = mixer.Sound('sounds/tom.WAV')
+pygame.mixer.set_num_channels(instruments * 3)
 
 
 def play_notes():
@@ -107,6 +110,29 @@ while run:
     timer.tick(fps)
     screen.fill(black)
     boxes = draw_grid(clicked, active_beat)
+    # lower menu buttons
+    play_pause = pygame.draw.rect(screen, gray, [50, HEIGHT - 150, 200, 100], 0, 5)
+    play_text = label_font.render('Play/Pause', True, white)
+    screen.blit(play_text, (70, HEIGHT - 130))
+    if playing:
+        play_text2 = medium_font.render('Playing', True, dark_gray)
+    else:
+        play_text2 = medium_font.render('Pasued', True, dark_gray)
+    screen.blit(play_text2, (70, HEIGHT - 100))
+    # bpm stuff
+    bpm_rect = pygame.draw.rect(screen, gray, [300, HEIGHT - 150, 200, 100], 5, 5)
+    bpm_text = medium_font.render('Beats Per Minute', True, white)
+    screen.blit(bpm_text, (308, HEIGHT - 130))
+    bpm_text2 = label_font.render(f'{bpm}', True, white)
+    screen.blit(bpm_text2, (370, HEIGHT - 100))
+    bmp_add_rect = pygame.draw.rect(screen, gray, [510, HEIGHT - 150, 48, 48], 0, 5)
+    bmp_sub_rect = pygame.draw.rect(screen, gray, [510, HEIGHT - 100, 48, 48], 0, 5)
+    add_text = medium_font.render('+1', True, white)
+    sub_text = medium_font.render('-1', True, white)
+    screen.blit(add_text, (520, HEIGHT - 140))
+    screen.blit(sub_text, (520, HEIGHT - 90))
+
+
     if beat_changed:
         play_notes()
         beat_changed = False
@@ -119,9 +145,18 @@ while run:
                 if boxes[i][0].collidepoint(event.pos):
                     coords = boxes[i][1]
                     clicked[coords[1]][coords[0]] *= -1
+        if event.type == pygame.MOUSEBUTTONUP:
+            if play_pause.collidepoint(event.pos):
+                if playing:
+                    playing = False
+                elif not playing:
+                    playing = True
+            elif bmp_add_rect.collidepoint(event.pos):
+                bpm += 1
+            elif bmp_sub_rect.collidepoint(event.pos):
+                bpm -= 1
 
     beat_length = 3600 // bpm
-
     if playing:
         if active_length < beat_length:
             active_length += 1
