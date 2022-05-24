@@ -117,7 +117,7 @@ while run:
     if playing:
         play_text2 = medium_font.render('Playing', True, dark_gray)
     else:
-        play_text2 = medium_font.render('Pasued', True, dark_gray)
+        play_text2 = medium_font.render('Paused', True, dark_gray)
     screen.blit(play_text2, (70, HEIGHT - 100))
     # bpm stuff
     bpm_rect = pygame.draw.rect(screen, gray, [300, HEIGHT - 150, 200, 100], 5, 5)
@@ -137,7 +137,18 @@ while run:
     screen.blit(sub_text, (520, HEIGHT - 90))
     screen.blit(addFive_text, (575, HEIGHT - 140))
     screen.blit(subFive_text, (575, HEIGHT - 90))
-
+    # beats stuff
+    beats_rect = pygame.draw.rect(screen, gray, [630, HEIGHT - 150, 165, 100], 5, 5)
+    beats_text = medium_font.render('Beats In Loop', True, white)
+    screen.blit(beats_text, (638, HEIGHT - 130))
+    beats_text2 = label_font.render(f'{beats}', True, white)
+    screen.blit(beats_text2, (700, HEIGHT - 100))
+    beat_add_rect = pygame.draw.rect(screen, gray, [805, HEIGHT - 150, 48, 48], 0, 5)
+    beat_sub_rect = pygame.draw.rect(screen, gray, [805, HEIGHT - 100, 48, 48], 0, 5)
+    add_text2 = medium_font.render('+1', True, white)
+    sub_text2 = medium_font.render('-1', True, white)
+    screen.blit(add_text2, (815, HEIGHT - 140))
+    screen.blit(sub_text2, (815, HEIGHT - 90))
 
     if beat_changed:
         play_notes()
@@ -165,6 +176,15 @@ while run:
                 bpm += 5
             elif bmp_subFive_rect.collidepoint(event.pos):
                 bpm -= 5
+            elif beat_add_rect.collidepoint(event.pos):
+                beats += 1
+                for i in range(len(clicked)):
+                    clicked[i].append(-1)
+            elif beat_sub_rect.collidepoint(event.pos):
+                beats -= 1
+                for i in range(len(clicked)):
+                    clicked[i].pop(-1)
+
 
     beat_length = 3600 // bpm
     if playing:
