@@ -158,6 +158,19 @@ while run:
     for i in range(instruments):
         rect = pygame.rect.Rect((0, i * 100), (200, 100))
         instrument_rects.append(rect)
+    # save and load stuff
+    save_button = pygame.draw.rect(screen, gray, [900, HEIGHT - 150, 200, 48], 0, 5)
+    load_button = pygame.draw.rect(screen, gray, [900, HEIGHT - 100, 200, 48], 0, 5)
+    save_text = label_font.render('Save Beat', True, white)
+    load_text = label_font.render('Load Beat', True, white)
+    screen.blit(save_text, (920, HEIGHT - 140))
+    screen.blit(load_text, (920, HEIGHT - 90))
+    # clear board
+    clear_button = pygame.draw.rect(screen, gray, [1150, HEIGHT - 150, 200, 100], 0, 5)
+    clear_text = label_font.render('Clear Board', True, white)
+    screen.blit(clear_text, (1160, HEIGHT - 120))
+
+
 
     if beat_changed:
         play_notes()
@@ -193,6 +206,8 @@ while run:
                 beats -= 1
                 for i in range(len(clicked)):
                     clicked[i].pop(-1)
+            elif clear_button.collidepoint(event.pos):
+                clicked = [[-1 for _ in range(beats)] for _ in range(instruments)]
             for i in range(len(instrument_rects)):
                 if instrument_rects[i].collidepoint(event.pos):
                     active_list[i] *= -1
