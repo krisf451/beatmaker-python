@@ -127,10 +127,16 @@ while run:
     screen.blit(bpm_text2, (370, HEIGHT - 100))
     bmp_add_rect = pygame.draw.rect(screen, gray, [510, HEIGHT - 150, 48, 48], 0, 5)
     bmp_sub_rect = pygame.draw.rect(screen, gray, [510, HEIGHT - 100, 48, 48], 0, 5)
+    bmp_addFive_rect = pygame.draw.rect(screen, gray, [565, HEIGHT - 150, 48, 48], 0, 5)
+    bmp_subFive_rect = pygame.draw.rect(screen, gray, [565, HEIGHT - 100, 48, 48], 0, 5)
     add_text = medium_font.render('+1', True, white)
     sub_text = medium_font.render('-1', True, white)
+    addFive_text = medium_font.render('+5', True, white)
+    subFive_text = medium_font.render('-5', True, white)
     screen.blit(add_text, (520, HEIGHT - 140))
     screen.blit(sub_text, (520, HEIGHT - 90))
+    screen.blit(addFive_text, (575, HEIGHT - 140))
+    screen.blit(subFive_text, (575, HEIGHT - 90))
 
 
     if beat_changed:
@@ -155,6 +161,10 @@ while run:
                 bpm += 1
             elif bmp_sub_rect.collidepoint(event.pos):
                 bpm -= 1
+            elif bmp_addFive_rect.collidepoint(event.pos):
+                bpm += 5
+            elif bmp_subFive_rect.collidepoint(event.pos):
+                bpm -= 5
 
     beat_length = 3600 // bpm
     if playing:
